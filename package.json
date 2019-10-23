@@ -1,0 +1,35 @@
+{
+  "name": "cookie-monster",
+  "version": "0.1.0",
+  "description": "Utilite for manipulation with cookie.",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.26.7",
+    "browserify": "^16.5.0",
+    "del": "^5.1.0",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.2.0",
+    "tsify": "^4.0.1",
+    "typescript": "^3.6.4",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexgred/cookie-monster.git"
+  },
+  "keywords": [
+    "cookie",
+    "typescript",
+    "javascript"
+  ],
+  "author": "Alex Dolzhenkov <alexgred.dev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexgred/cookie-monster/issues"
+  },
+  "homepage": "https://github.com/alexgred/cookie-monster#readme"
+}
