@@ -6,10 +6,9 @@ const browserSync = require('browser-sync');
 const browserify = require('browserify');
 const tsify = require('tsify');
 const source = require('vinyl-source-stream');
-
-// const uglify = require('gulp-uglify');
-// const cleanCSS = require('gulp-clean-css');
-// const rename = require('gulp-rename');
+const pump = require('pump');
+const uglify = require('gulp-uglify');
+const rename = require('gulp-rename');
 
 
 /* Dev
@@ -30,21 +29,68 @@ gulp.task('dev:ts', function () {
     .pipe(gulp.dest('./public/js'));
 });
 
+/* Dev index */
+gulp.task('dev:index', function() {
+
+  return gulp.src('./src/index.html')
+    .pipe(gulp.dest('./public'))
+});
+
+
+/* Prod
+======================= */
+
+/* Typescript compilation for prod */
+gulp.task('prod:ts', function() {
+  return browserify({
+      basedir: '.',
+      debug: false,
+      entries: ['src/ts/index.ts'],
+      cache: {},
+      packageCache: {}
+    })
+    .plugin(tsify, {
+      target: 'es5'
+    })
+    .bundle()
+    .pipe(source('cookie-monster.js'))
+    .pipe(gulp.dest('./dist'));
+});
+
+/* Minify JS */
+gulp.task('prod:min', function(cb) {
+  pump([
+      gulp.src('./dist/*.js'),
+      uglify(),
+      rename({
+        suffix: '.min',
+      }),
+      gulp.dest('./dist')
+    ],
+    cb
+  );
+});
+
+/* JS build */
+gulp.task('prod:js', gulp.series(
+  'prod:ts',
+  'prod:min'
+));
+
+
+/* Clean */
+gulp.task('prod:clean', function() {
+
+  return del('./dist');
+});
+
+
 
 /* Clean 
 ======================= */
 gulp.task('clean', function () {
 
   return del('./public');
-});
-
-
-/* Dev index 
-=========================*/
-gulp.task('dev:index', function () {
-
-  return gulp.src('./src/index.html')
-    .pipe(gulp.dest('./public'))
 });
 
 
@@ -85,4 +131,10 @@ gulp.task('dev:build', gulp.series(
 gulp.task('dev', gulp.series(
   'dev:build',
   gulp.parallel('watch', 'sync')
+));
+
+/* Prod */
+gulp.task('build', gulp.series(
+  'prod:clean',
+  'prod:js'
 ));
